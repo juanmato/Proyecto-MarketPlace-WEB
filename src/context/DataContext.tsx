@@ -1,12 +1,14 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Service, Quote, Insumo, InsumoPack } from '../types';
+import { createContext, useContext, ReactNode } from 'react';
+import { Service, Quote, Insumo, InsumoPack, InsumoEquivalencia } from '../types';
 import { mockServices, mockQuotes, mockInsumos, mockInsumoPacks } from '../data/mockData';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface DataContextType {
   services: Service[];
   quotes: Quote[];
   insumos: Insumo[];
   insumoPacks: InsumoPack[];
+  equivalencias: InsumoEquivalencia[];
   addService: (service: Service) => void;
   updateService: (service: Service) => void;
   deleteService: (id: string) => void;
@@ -17,6 +19,7 @@ interface DataContextType {
   updateInsumo: (insumo: Insumo) => void;
   deleteInsumo: (id: string) => void;
   addInsumoPack: (pack: InsumoPack) => void;
+  addEquivalencia: (equivalencia: InsumoEquivalencia) => void;
   selectQuote: (serviceId: string, quoteId: string) => void;
   completeService: (serviceId: string, rating: number, comment: string) => void;
   cancelService: (serviceId: string) => void;
@@ -25,42 +28,12 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export function DataProvider({ children }: { children: ReactNode }) {
-  const [services, setServices] = useState<Service[]>(() => {
-    const saved = localStorage.getItem('servicombo_services');
-    return saved ? JSON.parse(saved) : mockServices;
-  });
-
-  const [quotes, setQuotes] = useState<Quote[]>(() => {
-    const saved = localStorage.getItem('servicombo_quotes');
-    return saved ? JSON.parse(saved) : mockQuotes;
-  });
-
-  const [insumos, setInsumos] = useState<Insumo[]>(() => {
-    const saved = localStorage.getItem('servicombo_insumos');
-    return saved ? JSON.parse(saved) : mockInsumos;
-  });
-
-  const [insumoPacks, setInsumoPacks] = useState<InsumoPack[]>(() => {
-    const saved = localStorage.getItem('servicombo_packs');
-    return saved ? JSON.parse(saved) : mockInsumoPacks;
-  });
-
-  // Save to localStorage whenever data changes
-  useEffect(() => {
-    localStorage.setItem('servicombo_services', JSON.stringify(services));
-  }, [services]);
-
-  useEffect(() => {
-    localStorage.setItem('servicombo_quotes', JSON.stringify(quotes));
-  }, [quotes]);
-
-  useEffect(() => {
-    localStorage.setItem('servicombo_insumos', JSON.stringify(insumos));
-  }, [insumos]);
-
-  useEffect(() => {
-    localStorage.setItem('servicombo_packs', JSON.stringify(insumoPacks));
-  }, [insumoPacks]);
+  // Usar el hook personalizado para sincronizar automáticamente con localStorage
+  const [services, setServices] = useLocalStorage<Service[]>('servicombo_services', mockServices);
+  const [quotes, setQuotes] = useLocalStorage<Quote[]>('servicombo_quotes', mockQuotes);
+  const [insumos, setInsumos] = useLocalStorage<Insumo[]>('servicombo_insumos', mockInsumos);
+  const [insumoPacks, setInsumoPacks] = useLocalStorage<InsumoPack[]>('servicombo_packs', mockInsumoPacks);
+  const [equivalencias, setEquivalencias] = useLocalStorage<InsumoEquivalencia[]>('servicombo_equivalencias', []);
 
   const addService = (service: Service) => {
     setServices(prev => [service, ...prev]);
@@ -111,6 +84,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setInsumoPacks(prev => [...prev, pack]);
   };
 
+  const addEquivalencia = (equivalencia: InsumoEquivalencia) => {
+    setEquivalencias(prev => [...prev, equivalencia]);
+  };
+
   const selectQuote = (serviceId: string, quoteId: string) => {
     setServices(prev => prev.map(s => 
       s.id === serviceId 
@@ -141,6 +118,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       quotes,
       insumos,
       insumoPacks,
+      equivalencias,
       addService,
       updateService,
       deleteService,
@@ -151,6 +129,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       updateInsumo,
       deleteInsumo,
       addInsumoPack,
+      addEquivalencia,
       selectQuote,
       completeService,
       cancelService

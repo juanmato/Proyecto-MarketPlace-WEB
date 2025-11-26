@@ -2,20 +2,29 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { DataProvider } from './context/DataContext';
 import { Navbar } from './components/layout/Navbar';
-import { Landing } from './pages/Landing';
-import { Login } from './pages/Login';
-import { Dashboard } from './pages/Dashboard';
-import { ServiciosList } from './pages/ServiciosList';
-import { ServicioDetail } from './pages/ServicioDetail';
-import { NuevoServicio } from './pages/NuevoServicio';
-import { NuevaCotizacion } from './pages/NuevaCotizacion';
-import { EditarCotizacion } from './pages/EditarCotizacion';
-import { ComparadorCotizaciones } from './pages/ComparadorCotizaciones';
-import { Insumos } from './pages/Insumos';
-import { MisCotizaciones } from './pages/MisCotizaciones';
-import { NuevoPackInsumos } from './pages/NuevoPackInsumos';
-import { ProponerEquivalencias } from './pages/ProponerEquivalencias';
-import { DemandaInsumos } from './pages/DemandaInsumos';
+// Public pages
+import { Landing } from './pages/public/Landing';
+import { Login } from './pages/public/Login';
+
+// Shared pages
+import { Dashboard } from './pages/shared/Dashboard';
+import { ServicioDetail } from './pages/shared/ServicioDetail';
+
+// Servicios pages
+import { ServiciosList } from './pages/servicios/ServiciosList';
+import { NuevoServicio } from './pages/servicios/NuevoServicio';
+import { ComparadorCotizaciones } from './pages/servicios/ComparadorCotizaciones';
+
+// Cotizaciones pages
+import { NuevaCotizacion } from './pages/cotizaciones/NuevaCotizacion';
+import { EditarCotizacion } from './pages/cotizaciones/EditarCotizacion';
+import { MisCotizaciones } from './pages/cotizaciones/MisCotizaciones';
+
+// Insumos pages
+import { InsumosList } from './pages/insumos/InsumosList';
+import { NuevoPackInsumos } from './pages/insumos/NuevoPackInsumos';
+import { ProponerEquivalencias } from './pages/insumos/ProponerEquivalencias';
+import { DemandaInsumos } from './pages/insumos/DemandaInsumos';
 import { Toaster } from 'sonner';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -100,7 +109,7 @@ function AppRoutes() {
           path="/insumos"
           element={
             <ProtectedRoute>
-              <Insumos />
+              <InsumosList />
             </ProtectedRoute>
           }
         />

@@ -64,18 +64,54 @@ export interface Insumo {
   providerId: string;
 }
 
+export interface InsumoPackItem {
+  insumoId: string;
+  insumoName: string;
+  quantity: number;
+  unit?: string;
+  unitPrice: number;
+}
+
 export interface InsumoPack {
   id: string;
   name: string;
   serviceId: string;
   providerId: string;
   providerName: string;
-  items: {
-    insumoId: string;
-    insumoName: string;
-    quantity: number;
-    unitPrice: number;
-  }[];
+  items: InsumoPackItem[];
   totalPrice: number;
+  notes?: string;
+  createdAt: string;
+}
+
+// Tipo para formularios de cotización
+export interface QuoteFormData {
+  price: string;
+  deadline: string;
+  details: string;
+}
+
+// Tipo para formularios de servicio
+export interface ServiceFormData {
+  title: string;
+  description: string;
+  category: string;
+  address: string;
+  city: string;
+  preferredDate: string;
+}
+
+// Tipo para equivalencias de insumos
+export interface InsumoEquivalencia {
+  id: string;
+  serviceId: string;
+  providerId: string;
+  providerName: string;
+  originalInsumoId: string;
+  originalInsumoName: string;
+  proposedInsumoId: string;
+  proposedInsumoName: string;
+  reason: string;
+  notes?: string;
   createdAt: string;
 }
